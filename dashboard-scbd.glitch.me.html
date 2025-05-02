@@ -1,0 +1,254 @@
+<head>
+  <title>SCBD DASHBOARD-Corporate Scorecard</title>
+  <link
+    rel="icon"
+    href="https://lh3.googleusercontent.com/pw/AP1GczNzXltTdYmjKPMGA8w38Qw1ifkNiUgNUaYy8aiQZ-SNVKhukRLkd4O3-1FrjTAvHPHruS0aZ1ARiS-DtyB-1KIPWT8SMw7U61OsOUn8Dqnqsh3M_TT5Ow7ZwFIkGRXWxcASSNEW-Sstxx07SaXeUeQj=w32-h32-s-no-gm?authuser=0"
+    type="x-icon"
+  />
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #wrapper {
+      transform-origin: top left;
+      width: 1366px;
+      height: 768px;
+      transform: scale(1);
+    }
+
+    body {
+      background-image: url("https://lh3.googleusercontent.com/pw/AP1GczM6rLrw9HUIOOiXAbMHzbFEJ7wIlmcFAYd9x4hUTS-ikrDLLKT2F9TX8mBXMUXd78DsSayPYrRZuxe9JuBsW9QA3UeC8PESn5Z3ivr5h1p6Z2FRgIi9R1A9HvO4Ca9qQ81YRVhNk5LopmBloe88w3rX=w1366-h911-s-no-gm?authuser=0");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+  </style>
+
+  <script>
+    const password = prompt("Enter password: (Kosongkan saja, hanya trial)");
+    if (password !== "") {
+      document.write(
+        "<h1 style='color: red; text-align: center; margin-top: 20%; font-family: sans-serif;'>Access Denied</h1>"
+      );
+      throw new Error("Unauthorized access");
+    }
+  </script>
+</head>
+
+<body>
+  <iframe
+    id="TopLayer"
+    style="
+      width: 100%;
+      height: 100%;
+      top: 0px;
+      left: 0px;
+      border: 0;
+      position: absolute;
+      background-color: #000;
+      opacity: 1;
+      z-index: 1000;
+      display: none;
+    "
+  >
+  </iframe>
+
+  <div id="wrapper">
+    <!-- Dropdown Pilih Data -->
+    <div style="position: absolute; top: 2%; left: 11%; z-index: 998">
+      <select
+        id="menuSelect"
+        style="
+          font-family: Tahoma, sans-serif;
+          font-size: 16px;
+          padding: 3px 6px;
+          border: 2px solid #ffeb3b;
+          border-radius: 8px;
+          background: #000;
+          color: #fff;
+          cursor: pointer;
+          box-shadow: 0 0 8px #ffff66, 0 0 16px #ffff66;
+          transition: box-shadow 0.5s ease-in-out, border-color 0.5s;
+          display: block;
+        "
+        onmouseover="this.style.boxShadow='0 0 12px #ffd700, 0 0 28px #ffd700'; this.style.borderColor='#ffd700';"
+        onmouseout="this.style.boxShadow='0 0 8px #ffff66, 0 0 16px #ffff66'; this.style.borderColor='#ffeb3b';"
+      >
+        <option value="select-dashboard" selected>
+          -- Select Dashboard --
+        </option>
+        <option value="corporate-scorecard">Corporate Scorecard</option>
+        <option value="project-management">Project Management</option>
+        <option id="countdownLoop" value="interval-loop">Interval Loop</option>
+      </select>
+    </div>
+
+    <!-- Info to quit fullscreen -->
+    <div
+      id="infoQuitFullscreen"
+      style="
+        position: absolute;
+        top: 6.5%;
+        left: 13.7%;
+        width: 350;
+        z-index: 999;
+        font-family: Tahoma, sans-serif;
+        font-size: 14px;
+        font-style: italic;
+        color: white;
+        display: none;
+      "
+    >
+      Press Esc to exit.
+    </div>
+
+    <!-- Iframe untuk Menampilkan Konten -->
+    <iframe
+      id="Showcase"
+      style="
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border: 0;
+        position: fixed;
+      "
+      frameborder="0"
+      scrolling="no"
+      src=""
+    ></iframe>
+
+    <script>
+      const userAgent = navigator.userAgent.toLowerCase();
+
+      const isMobile =
+        userAgent.includes("mobile") ||
+        userAgent.includes("android") ||
+        userAgent.includes("iphone");
+
+      // Elemen DOM
+      const menuSelect = document.getElementById("menuSelect");
+      const infoQuitFullscreen = document.getElementById("infoQuitFullscreen");
+      const showCase = document.getElementById("Showcase");
+      const countdownLoop = document.getElementById("countdownLoop");
+
+      document.onkeydown = (e) => {
+        if (e.ctrlKey && e.shiftKey && e.altKey && e.key === "L") {
+          menuSelect.value = "interval-loop";
+          menuSelect.dispatchEvent(new Event("change"));
+        }
+      };
+
+      // Variabel untuk melacak status iframe
+      let currentSRC = "corporate-scorecard";
+      let intervalID;
+      let countdown;
+      let countdownID;
+
+      // Fungsi untuk menangani pemilihan menu
+      menuSelect.addEventListener("change", function () {
+        if (menuSelect.options.length > 3) {
+          // Periksa jika jumlah opsi lebih dari 3
+          menuSelect.remove(0);
+        }
+
+        clearInterval(intervalID); // Hentikan interval yang ada
+        clearInterval(countdownID); // Hentikan interval yang ada
+        countdownLoop.textContent = "Interval Loop";
+        infoQuitFullscreen.style.display = "block";
+
+        // Menyesuaikan URL iframe dan judul berdasarkan pilihan menu
+        if (this.value === "corporate-scorecard") {
+          showCase.src = "https://csc-2025.glitch.me/?update=" + Date.now();
+          document.title = "SCBD DASHBOARD-Corporate Scorecard";
+        } else if (this.value === "project-management") {
+          showCase.src = "https://scbd-project.glitch.me/?update=" + Date.now();
+          document.title = "SCBD DASHBOARD-Project Management";
+        } else {
+          loopDashboard(); // Loop pertama
+          intervalID = setInterval(loopDashboard, 60000 + 2000);
+        }
+        goFullscreen();
+      });
+
+      // Fungsi untuk loop konten secara otomatis
+      function loopDashboard() {
+        clearInterval(countdownID);
+        checkDisplayTime();
+        if (currentSRC === "corporate-scorecard") {
+          showCase.src = "https://csc-2025.glitch.me/?update=" + Date.now();
+          document.title = "SCBD DASHBOARD-Corporate Scorecard";
+          currentSRC = "project-management"; // Pindah ke project management
+        } else if (currentSRC === "project-management") {
+          showCase.src = "https://scbd-project.glitch.me/?update=" + Date.now();
+          document.title = "SCBD DASHBOARD-Project Management";
+          currentSRC = "corporate-scorecard"; // Kembali ke corporate scorecard
+        }
+        countdown = 60;
+        countdownID = setInterval(function () {
+          countdownLoop.textContent = "Interval Loop (" + countdown + ")";
+          countdown--;
+
+          if (countdown < 0) {
+            countdown = 0;
+          }
+        }, 1000);
+      }
+
+      // Fungsi untuk menyesuaikan skala tampilan berdasarkan ukuran layar
+      function scalePage() {
+        const baseWidth = 1366;
+        const baseHeight = 768;
+        const scaleX = window.innerWidth / baseWidth;
+        const scaleY = window.innerHeight / baseHeight;
+        const scale = Math.min(scaleX, scaleY);
+
+        const wrapper = document.getElementById("wrapper");
+        wrapper.style.transform = `scale(${scale})`;
+      }
+
+      window.addEventListener("resize", scalePage);
+      window.addEventListener("load", scalePage);
+
+      function goFullscreen() {
+        if (!isMobile) {
+          // Masuk fullscreen
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          } else if (document.documentElement.mozRequestFullScreen) {
+            // Firefox
+            document.documentElement.mozRequestFullScreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            // Chrome, Safari, Opera
+            document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            // IE/Edge
+            document.documentElement.msRequestFullscreen();
+          }
+        }
+      }
+
+      function checkDisplayTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const currentTime = hours * 60 + minutes;
+
+        const startTime = 7 * 60 + 30; // 07:30 dalam menit
+        const endTime = 16 * 60 + 25; // 16:25 dalam menit
+
+        if (currentTime >= startTime && currentTime <= endTime) {
+          TopLayer.style.display = "none";
+        } else {
+          TopLayer.style.display = "block";
+        }
+      }
+    </script>
+  </div>
+</body>
